@@ -1,0 +1,24 @@
+.program test
+	nop
+.header
+	stack #1024
+	heap #1024
+.data
+	sum #4
+	average #4
+	i #4
+	max #4
+.code
+	move sum #0		
+	move average #0	
+	move i #0
+	move max #10
+	loopstart:
+		cmp i max
+		ge exitloop:
+		add sum i
+		add i #1
+		jmp loopstart:
+	exitloop:
+	halt
+.end

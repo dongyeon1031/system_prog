@@ -1,0 +1,61 @@
+;int func(int a, int b) {
+;    int c = a + b;
+;    return c;
+;}
+;
+;int main() {
+;	int sum = 0;
+;	int average = 0;
+;	int i = 0;
+;	int max = 10;
+;	while(i >= max){
+;		sum = func(i,sum);
+;		i = i+1;
+;	}
+;}
+.program test
+	nop
+.header
+	stack #1024
+	heap #1024
+.data
+	sum #1
+	average #1
+	i #1
+	max #1
+.code
+	main:
+		move sum #0
+		move average #0
+		move i #0
+		move max #10
+		loopstart:
+			cmp i max
+			ge exitloop:
+			move r0 i
+			push r0			; stack에 r0 push (stack pointer 감소)
+			move r0 sum
+			push r0			; stack에 r1 push "
+			fcall func:		; stack에 반환 주소 push하고 jump
+			add rsp #2		; 파라미터 공간만큼 stack pointer 증가 (main에서 나머지 값 정리) 
+			move sum r0
+			add i #1
+			jmp loopstart:
+		exitloop:
+		;mov rah #14
+		;mov ral sum
+		;int 10
+		halt
+	func:
+		push rbp				; 현재 프레임 포인터를 저장 (반환할 때 다시 돌아가기 위해서)
+		move rbp rsp			; 현재 스택 포인터를 프레임 포인터로 옮겨 함수 실행할 준비
+		
+		move r0 [ rbp + #2 ]		; r0에 첫 번째 파라미터 저장 (i)
+		add r0 [ rbp + #3 ]		; 첫 번째 파라미터 + 두 번째 파라미터 (sum)
+		push r0					; 함수 내 지역 변수 할당 및 해당 값 저장
+		
+		move r0 [ rbp - #1 ]	; rbp-4 : 지역 변수 저장 위치 / 반환값 저장 레지스터에 해당 값 옮김.
+		move rsp rbp			; 스택 포인터 다시 호출 전으로 낮추기
+		pop rbp					; -> 현재 스택 포인터 = 반환 주소 가리키고 있음
+		fret						; 반환주소 pop 해서 pc에 저장함
+.end
