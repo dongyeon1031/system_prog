@@ -16,11 +16,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import main.MicroProcessor;
+import system.CPU.EOperationSelectSignal;
 import system.CPU.ERegister;
 
 public class DisplayPanel extends JFrame{
@@ -31,9 +33,11 @@ public class DisplayPanel extends JFrame{
 	//component
 	private RegisterLabel[] registerLabels;
 	private JPanel mainPanel;
+	
 	private MemoryPanel memoryTable;
 	private JPanel registerPanel;
 	private JPanel universalRegisterPanel;
+	private ALUToolBar aluToolbar;
 	//attribute
 	
 	private JButton nextButton;
@@ -55,6 +59,9 @@ public class DisplayPanel extends JFrame{
 		
 		mainPanel = new JPanel(new BorderLayout());
         add(mainPanel);
+        
+        this.aluToolbar = new ALUToolBar();
+        this.mainPanel.add(this.aluToolbar, BorderLayout.NORTH);
         
         JPanel memoryPanel = new JPanel(new BorderLayout());
         mainPanel.add(memoryPanel, BorderLayout.EAST);
@@ -128,6 +135,7 @@ public class DisplayPanel extends JFrame{
 				if(!microProcessor.getCPU().run()) {
 					microProcessor.bPowerOn = false;
 				}
+				microProcessor.getVGA().run();
 				updateUI();
 			} catch (Exception exception) {
 				exception.printStackTrace();
@@ -146,6 +154,7 @@ public class DisplayPanel extends JFrame{
 				(registerState[ERegister.eBP.ordinal()]+registerState[ERegister.eBase.ordinal()]),
 				(registerState[ERegister.eSP.ordinal()]+registerState[ERegister.eBase.ordinal()]),
 				(registerState[ERegister.ePC.ordinal()]+registerState[ERegister.eBase.ordinal()]));
+		this.aluToolbar.setInfo(this.microProcessor.getCPU().getALUState());
 	}
 	
 	private class RegisterLabel extends JLabel{
@@ -218,6 +227,23 @@ public class DisplayPanel extends JFrame{
 	            }
 	            return c;
 	        }
+		}
+	}
+	
+	private class ALUToolBar extends JToolBar{
+		private static final long serialVersionUID = 1L;
+		private JLabel infoLabel;
+		private final String aluInfo = "ALU state : ";
+		public ALUToolBar() {
+			this.infoLabel = new JLabel(aluInfo);
+			this.add(infoLabel);
+		}
+		public void setInfo(EOperationSelectSignal signal) {
+			if(signal != null) {
+				this.infoLabel.setText(aluInfo + signal.name());	
+			}else {
+				this.infoLabel.setText(aluInfo + "none");
+			}
 		}
 	}
 	

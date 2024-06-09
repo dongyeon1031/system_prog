@@ -19,9 +19,7 @@ public class Kernal {
 	private CPU cpu;
 	
 	//construtor
-	public Kernal(CPU cpu, Memory memory) {
-		this.memory = memory;
-		this.cpu = cpu;
+	public Kernal() {
 	}
 	
 	public PCB createPCB(Scanner scanner) throws Exception {
@@ -46,5 +44,10 @@ public class Kernal {
 		this.cpu.setLimit(heap+stack+data+code);		// 사이즈
 		
 		return pcb;
+	}
+
+	public void boot(CPU cpu, Memory memory) {
+		this.memory = memory;
+		this.cpu = cpu;
 	}
 }

@@ -2,6 +2,7 @@ package OS;
 
 import java.util.Scanner;
 
+import IOdevice.VGA;
 import component.PCB;
 import component.PCB.PState;
 import system.CPU;
@@ -17,9 +18,7 @@ public class Loader {
 	// association
 	private Memory memory;
 	private CPU cpu;
-	public Loader(CPU cpu, Memory memory) {
-		this.memory = memory;
-		this.cpu = cpu;
+	public Loader() {
 	}
     public boolean load(Scanner scanner, PCB pcb) {
     	int pc = pcb.getPC(); 
@@ -29,7 +28,7 @@ public class Loader {
     	
     	for(int i=pc ; ; i++) {
     		int instruction = Integer.parseInt(scanner.next(), 16);
-    		memory.store(i+pcb.getMemoryAddress(), instruction);	// 이건 절대주소로 할당해야 할듯? -> 실제 프로세스 주소로
+    		memory.store(i+pcb.getMemoryAddress(), instruction);	// 실제 프로세스 주소로 할당
     		if(!scanner.hasNext()) {
     			break;
     		}
@@ -40,4 +39,11 @@ public class Loader {
         
         return true;
     }
+	public void boot(CPU cpu, Memory memory, VGA vga) {
+		// VGA가 접근할 메모리 주소를 할당한다.
+		this.memory = memory;
+		this.cpu = cpu;
+		vga.load(this.memory.allocate(VGA.TEXT_MODE_MEMORY_SIZE));
+		
+	}
 }

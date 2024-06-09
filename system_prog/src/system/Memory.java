@@ -1,5 +1,6 @@
 package system;
 
+import java.util.List;
 import java.util.Vector;
 
 import component.PCB;
@@ -7,20 +8,18 @@ import component.PCB.PState;
 
 public class Memory implements Device {
 	// attribute
-	public static final int PRINT_INTERRUPT = 0;
-	public static final int SCAN_INTERRUPT = 1;
+//	public static final int PRINT_INTERRUPT = 0;
+//	public static final int SCAN_INTERRUPT = 1;
 	private PCB currentPCB;
 	
 	// component
 	public Vector<Integer> memories;
 	private Vector<PCB> process_table;
-	public boolean interrupted = false;
+//	public boolean interrupted = false;
 
 	public Memory() {
 		this.memories = new Vector<>();
 		this.process_table = new Vector<>();
-		this.memories.add(-1); // print interrupt를 위한 공간
-		this.memories.add(-1); // scan interrupt를 위한 공간 
 	}
 
 	public boolean initialize() {
@@ -28,32 +27,34 @@ public class Memory implements Device {
 	}
 
 	public int load(int MAR) {
-		if (MAR == SCAN_INTERRUPT) {
-			this.interrupted = true;
-			while (this.interrupted) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+//		if (MAR == SCAN_INTERRUPT) {
+//			this.interrupted = true;
+//			while (this.interrupted) {
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 		return this.memories.get(MAR);
+	}
+	public List<Integer> loadSection(int MAR, int size) {
+		return this.memories.subList(MAR, size);
 	}
 
 	public boolean store(int MAR, int MBR) {
 		this.memories.set(MAR, MBR);
-		if (MAR == PRINT_INTERRUPT) {
-			this.interrupted = true;
-		}
-//		System.out.println(this.memories.get(MAR));
+//		if (MAR == PRINT_INTERRUPT) {
+//			this.interrupted = true;
+//		}
 		return true;
 	}
 	
 
-	public void interrupt() {
-		this.interrupted = true;
-	}
+//	public void interrupt() {
+//		this.interrupted = true;
+//	}
 
 	public boolean finish() {
 		return true;

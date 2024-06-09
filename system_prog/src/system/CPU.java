@@ -114,20 +114,27 @@ public class CPU implements Device {
 		this.registers[ERegister.eLimit.ordinal()] = size;
 	}
 
+	// @display method
 	private void display(String opcode) {
 		System.out.println("*************************************");
 		System.out.println("opcode: " + opcode);
 		System.out.print("operands: ");
 		for (int i : this.operands) {
-			System.out.print(i + " ");
+			System.out.print(String.format("%02x", i) + " ");
 		}
-		System.out.println("\nR0 : " + this.registers[ERegister.eR0.ordinal()]+"\tR1: " + this.registers[ERegister.eR1.ordinal()]+"\tR2: " + this.registers[ERegister.eR2.ordinal()]);
+		System.out.println("\nR0 : " + String.format("%x",this.registers[ERegister.eR0.ordinal()])
+		+"\tR1: " + String.format("%x",this.registers[ERegister.eR1.ordinal()])
+		+"\tR2: " + String.format("%x",this.registers[ERegister.eR2.ordinal()]));
 		System.out.println("*************************************\n");
 	}
 	public int[] getState() {
 		return this.registers;
 	}
+	public EOperationSelectSignal getALUState() {
+		return this.alu.eOperationSelectSignal;
+	}
 
+	// state change method
 	private void increasePC() {
 		this.registers[ERegister.ePC.ordinal()] += 1;
 	}
@@ -163,6 +170,15 @@ public class CPU implements Device {
 		this.registers[ERegister.eMBR.ordinal()] = this.mmu.load(EDeviceId.eMemory, this.registers[Rn.ordinal()], 
 				this.registers[ERegister.eBase.ordinal()], this.registers[ERegister.eLimit.ordinal()]);
 		this.move(Rd, ERegister.eMBR);
+	}
+	private void storer(ERegister Rd, ERegister Rn) throws Exception {
+		// @input : Rd register, Rn register
+		// @Rule : Rn register의 값을 MBR에 옮기고 Rd register가 가리키는 메모리 주소를 MAR에 저장한 뒤 메모리에 저장한다.
+		
+		this.registers[ERegister.eMAR.ordinal()] = this.registers[Rd.ordinal()];
+		this.registers[ERegister.eMBR.ordinal()] = this.registers[Rn.ordinal()];
+		this.mmu.store(EDeviceId.eMemory, this.registers[ERegister.eMAR.ordinal()],
+				this.registers[ERegister.eMBR.ordinal()], this.registers[ERegister.eBase.ordinal()], this.registers[ERegister.eLimit.ordinal()]);
 	}
 	
 	// @push / pop register
@@ -224,14 +240,14 @@ public class CPU implements Device {
 	
 	//@System Calls
 	private void interrupt(int address, ERegister Rd) {
-		switch(address) {
-		case Memory.SCAN_INTERRUPT:
+//		switch(address) {
+//		case Memory.SCAN_INTERRUPT:
 //			this.set(Rd, this.bus.load(EDeviceId.eMemory, address));
-			break;
-		case Memory.PRINT_INTERRUPT:
+//			break;
+//		case Memory.PRINT_INTERRUPT:
 //			this.bus.store(EDeviceId.eMemory, address, this.registers[Rd.ordinal()]);
-			break;
-		}
+//			break;
+//		}
 	}
 //	private void halt() {
 //		
@@ -302,6 +318,8 @@ public class CPU implements Device {
 			this.interrupt(this.combineOperand(Arrays.copyOfRange(operands, 0, 2)), ERegister.values()[this.operands[2]]);
 		}else if(opCode == EOpcode.eLoadr.ordinal()) {
 			this.loadr(ERegister.values()[this.operands[0]], ERegister.values()[this.operands[1]]);
+		}else if(opCode == EOpcode.eStorer.ordinal()) {
+			this.storer(ERegister.values()[this.operands[0]], ERegister.values()[this.operands[1]]);
 		}else {
 			// ALU한테 연산 시켜버리기
 			this.alu.doOperation(ERegister.values()[this.operands[0]], ERegister.values()[this.operands[1]]);
@@ -338,10 +356,11 @@ public class CPU implements Device {
 		return retVal;
 	}
 	
-	private enum EOperationSelectSignal{
+	public enum EOperationSelectSignal{
 		//ALU가 수행할 연산 종류를 나타내는 신호 -> opcode는 기계어고 signal은 전기 신호임. (CU가 생성)
 		eAddSign, eAndSign, eCompareSign, eNotSign, eShearSign,
 	}
+
 	private class ALU{
 		private EOperationSelectSignal eOperationSelectSignal;
 

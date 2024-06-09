@@ -45,17 +45,20 @@
 		;mov rah #14
 		;mov ral sum
 		;int 10
+		move r1 #0
+		move r0 sum
+		move [ r1 - #1024 ] r0	;r1-1024 (메모리 젤 바닥) 주소에 r0 값을 옮긴다.  
 		halt
 	func:
 		push rbp				; 현재 프레임 포인터를 저장 (반환할 때 다시 돌아가기 위해서)
 		move rbp rsp			; 현재 스택 포인터를 프레임 포인터로 옮겨 함수 실행할 준비
 		
-		move r0 [ rbp + #2 ]		; r0에 첫 번째 파라미터 저장 (i)
+		move r0 [ rbp + #2 ]	; r0에 첫 번째 파라미터 저장 (i)
 		add r0 [ rbp + #3 ]		; 첫 번째 파라미터 + 두 번째 파라미터 (sum)
 		push r0					; 함수 내 지역 변수 할당 및 해당 값 저장
 		
 		move r0 [ rbp - #1 ]	; rbp-4 : 지역 변수 저장 위치 / 반환값 저장 레지스터에 해당 값 옮김.
 		move rsp rbp			; 스택 포인터 다시 호출 전으로 낮추기
 		pop rbp					; -> 현재 스택 포인터 = 반환 주소 가리키고 있음
-		fret						; 반환주소 pop 해서 pc에 저장함
+		fret					; 반환주소 pop 해서 pc에 저장함
 .end

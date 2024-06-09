@@ -1,13 +1,18 @@
+;int main() {
+;	int sum = 0;
+;	int average = 0;
+;	int i = 0;
+;	int max = 10;
+;	while(i >= max){
+;		sum = sum + i;
+;		i = i+1;
+;	}
+;}
 .program test
 	nop
 .header
 	stack #1024
 	heap #1024
-.data
-	sum #4
-	average #4
-	i #4
-	max #4
 .code
 	move sum #0		
 	move average #0	
@@ -21,4 +26,9 @@
 		jmp loopstart:
 	exitloop:
 	halt
+.data
+	sum #1
+	average #1
+	i #1
+	max #1
 .end

@@ -1,5 +1,6 @@
 package system;
 
+import IOdevice.VGA;
 import constants.EDeviceId;
 
 public class MMU {
@@ -23,7 +24,11 @@ public class MMU {
 	}
 	public boolean store(EDeviceId eDeviceid, int MAR, int MBR, int base, int limit) throws Exception {
 		if(MAR > limit || MAR < 0) {
-			throw new Exception();	// 할당된 메모리 공간 외에 접근을 시도한 경우
+			if(MAR + base >=VGA.system_memory_address && MAR + base < VGA.system_memory_address+VGA.TEXT_MODE_MEMORY_SIZE) {
+				// 메모리에 페이지 테이블 만들어서 해당 페이지 테이블 참조해서 접근 허용하는 방식으로 변경해야 한다.
+			}else {
+				throw new Exception();	// 할당된 메모리 공간 외에 접근을 시도한 경우	
+			}
 		}
 		return this.bus.store(eDeviceid, MAR + base, MBR);
 	}

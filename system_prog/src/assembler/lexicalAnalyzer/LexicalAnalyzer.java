@@ -166,6 +166,7 @@ public class LexicalAnalyzer {
 			
 			next = this.scanner.next();
 		}
+
 		return retToken;
 	}
 }

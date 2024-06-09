@@ -107,8 +107,48 @@ public class InstructionMappingTable {
 	}
 	public static Vector<String> makeMove(Token op0, Token op1) throws Exception{
 		Vector<String> instructions = new Vector<>();
-		
-		if(op0.getType() == EType.eRegister) { // 옮길 곳이 레지스터인 경우
+		if(op0.getType() == EType.eAddress) {	// 옮길 곳이 주소인 경우 (주소 참조 연산자)
+			switch(op1.getType()) { // 옮길 대상별로 처리
+			case eRegister: // move
+				int r0 = getRegisterNum(op1);
+				int r1 = getNextRegisterNum(r0);
+				int r2 = getNextRegisterNum(r1);
+				instructions.add(makePush(r1));
+				instructions.add(makePush(r2));
+				instructions.add(makeMove(r1, getRegisterNum(op1)));
+				
+				int constant = op0.getInitialValue();
+				if(constant < 0) {	// 음수인 경우 (보수 연산)
+					constant *= -1;
+					instructions.add(makeMoveC(r2, constant));
+					instructions.add(makeNot(r2));
+					
+					int r3 = getNextRegisterNum(r2);
+					instructions.add(makePush(r3));
+					
+					instructions.add(makeMoveC(r3, 1));
+					instructions.add(makeAdd(r2, r3));	// r2 += 1;
+					instructions.add(makeAdd(r1, r2));	// r1 += r2; (뺄셈)
+					
+					instructions.add(makePop(r3));
+				}else {				// 양수인 경우
+					instructions.add(makeMoveC(r2, constant));
+					instructions.add(makeAdd(r1,r2));	
+				}
+				
+				instructions.add(makeStoreR(r1, r0));
+				instructions.add(makePop(r1));
+				instructions.add(makePop(r2));
+				break;
+//			case eVariable: // load
+//				
+//				break;
+//			case eConstant: // moveC
+//				break;
+			default: 
+				throw new Exception();
+			}
+		}else if(op0.getType() == EType.eRegister) { // 옮길 곳이 레지스터인 경우
 			switch(op1.getType()) { // 옮길 대상별로 처리
 			case eRegister: // move
 				instructions.add(makeMove(getRegisterNum(op0), getRegisterNum(op1)));
@@ -329,6 +369,13 @@ public class InstructionMappingTable {
 	}
 	private static String makeLoadR(int register0Num, int register1Num) {
 		String instruction = getOpcode(EOpcode.eLoadr.getInst());
+		instruction += String.format("%02X", register0Num);
+		instruction += String.format("%02X", register1Num);
+		instruction += "00";
+		return instruction;
+	}
+	private static String makeStoreR(int register0Num, int register1Num) {
+		String instruction = getOpcode(EOpcode.eStorer.getInst());
 		instruction += String.format("%02X", register0Num);
 		instruction += String.format("%02X", register1Num);
 		instruction += "00";

@@ -27,9 +27,9 @@ public class Bus implements Device{
 	}
 	public boolean store(EDeviceId eDeviceid, int MAR, int MBR) {
 		if(eDeviceid == EDeviceId.eMemory) {
-			if (MAR == Memory.SCAN_INTERRUPT) {
-				System.out.println("enter bus mbr: "+MBR+" "+MAR);
-			}
+//			if (MAR == Memory.SCAN_INTERRUPT) {
+//				System.out.println("enter bus mbr: "+MBR+" "+MAR);
+//			}
 			return this.memory.store(MAR, MBR);
 		}
 		return false;
