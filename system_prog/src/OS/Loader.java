@@ -26,12 +26,12 @@ public class Loader {
     	int sp = pcb.getSP();
     	this.cpu.setSP(sp);
     	
-    	for(int i=pc ; ; i++) {
+    	for(int i=pc ; scanner.hasNext() ; i++) {
     		int instruction = Integer.parseInt(scanner.next(), 16);
     		memory.store(i+pcb.getMemoryAddress(), instruction);	// 실제 프로세스 주소로 할당
-    		if(!scanner.hasNext()) {
-    			break;
-    		}
+//    		if(!scanner.hasNext()) {
+//    			break;
+//    		}
     	}
     	pcb.setState(PState.pReady);
     	

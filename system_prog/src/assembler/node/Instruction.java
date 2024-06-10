@@ -11,7 +11,7 @@ public class Instruction extends Node{
 		eCmp("cmp", 2),
 		eJmp("jmp", 1),
 		eGe("ge", 1),
-		eInt("int", 1),
+//		eInt("int", 1),
 		ePush("push", 1),
 		ePop("pop", 1),
 		eCall("fcall", 1),	// 함수 호출 -> 반환 주소 push + jump로 구성

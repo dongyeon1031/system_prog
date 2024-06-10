@@ -35,9 +35,6 @@ public class Program extends Node {
 					codeSegment = new CodeSegment(super.lexical_analyzer);
 					token = codeSegment.parse(token);
 				}else if(token.getName().equals(EKeyword.eEnd.getKeyword())) {
-//					for(Token t : symbol_table.getSymbolTable()) {
-//						System.out.println(t.getName()+" "+t.getType()+ " "+t.getOffset());
-//					}
 					return null;
 				}
 			} else {

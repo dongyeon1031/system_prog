@@ -79,9 +79,9 @@ public class CodeGenerator {
 				case eHalt:
 					instructions = InstructionMappingTable.makeHalt();
 					break;
-				case eInt:
-					instructions = InstructionMappingTable.makeInt(instruction.getOperand()[0]);
-					break;
+//				case eInt:
+//					instructions = InstructionMappingTable.makeInt(instruction.getOperand()[0]);
+//					break;
 				case eRet:
 					instructions = InstructionMappingTable.makeRet();
 					break;

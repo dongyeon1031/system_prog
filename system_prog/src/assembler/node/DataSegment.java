@@ -12,8 +12,6 @@ public class DataSegment extends Node {
 
 	@Override
 	public Token parse(Token token) throws Exception {
-//		int dataSegmentSize = 0;
-		// -> data segment size는 프로그램 로드할 때 심볼테이블에서 variable 직접 읽고 할당하자.
 		Token name = super.lexical_analyzer.getToken();
 		
 		while(name.getType() != EType.eSegmentHead) {

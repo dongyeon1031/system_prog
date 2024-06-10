@@ -1,8 +1,7 @@
-/.DS_Store
-/IOdevice/
-/OS/
 /assembler/
+/main/
+/IOdevice/
 /component/
 /constants/
-/main/
 /system/
+/OS/

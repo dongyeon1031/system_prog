@@ -24,11 +24,6 @@ public class VGA implements Device{
 	}
 	//method
 	public void run() {
-		
-//		Vector<Integer> memory = ;
-//		for(int i=0; i<TEXT_MODE_MEMORY_SIZE; i++) {
-//			this.vga_memory.set(i, memory.get(i));
-//		}
 		this.vga_memory = new Vector<>(this.pciBus.load(EDeviceId.eMemory, system_memory_address, TEXT_MODE_MEMORY_SIZE));
 		this.monitor.getSignal(this.vga_memory);
 	}

@@ -66,13 +66,13 @@ public class MicroProcessor {
 	public void run() throws Exception {
 		this.os.loadProgram(System.getProperty("user.dir")+ "/binary/a.out.txt");
 		
-//		while(bPowerOn) {
-//			if(!this.cpu.run()) {
-//				this.bPowerOn = false;
-//			}
-//			this.vga.run();
-//		}
-		this.displayPanel = new DisplayPanel(this);
+		while(bPowerOn) {
+			if(!this.cpu.run()) {
+				this.bPowerOn = false;
+			}
+			this.vga.run();
+		}
+//		this.displayPanel = new DisplayPanel(this);
 		
 	}
 

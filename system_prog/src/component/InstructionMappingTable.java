@@ -299,13 +299,13 @@ public class InstructionMappingTable {
 		instructions.add(instruction_notbz);
 		return instructions;
 	}
-	public static Vector<String> makeInt(Token op0){
-		Vector<String> instructions = new Vector<>();
-		String instruction_jmp = getOpcode(EOpcode.eInterrupt.getInst());
-		instruction_jmp += String.format("%06X", getRegisterNum(op0));
-		instructions.add(instruction_jmp);
-		return instructions;
-	}
+//	public static Vector<String> makeInt(Token op0){
+//		Vector<String> instructions = new Vector<>();
+//		String instruction_jmp = getOpcode(EOpcode.eInterrupt.getInst());
+//		instruction_jmp += String.format("%06X", getRegisterNum(op0));
+//		instructions.add(instruction_jmp);
+//		return instructions;
+//	}
 	public static Vector<String> makePush(Token op0){
 		Vector<String> instructions = new Vector<>();
 		instructions.add(makePush(getRegisterNum(op0)));

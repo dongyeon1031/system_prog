@@ -14,8 +14,6 @@ public class HeaderSegment extends Node{
 
 	@Override
 	public Token parse(Token token) throws Exception {
-		// 다음 토큰 읽어서 다음 토큰을 반환하는 방식으로 하자.
-		// 지금 for문 수정하기 -> enum에 catagory 만들어야 한다. (segment head type이 나오기 전까지 루프 돌리기)
 		Token keyword = super.lexical_analyzer.getToken();
 		
 		while(keyword.getType() != EType.eSegmentHead) {

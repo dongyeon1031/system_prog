@@ -14,7 +14,6 @@ public class Assembler {
 	private Linker linker;
 	
 	public Assembler() {
-//		this.lexical_analyzer = new LexicalAnalyzer("source/test.txt");
 		this.lexical_analyzer = new LexicalAnalyzer(System.getProperty("user.dir")+ "/source/test.txt");
 		this.parser = new Parser(this.lexical_analyzer);
 		this.code_generator = new CodeGenerator(this.parser);

@@ -313,9 +313,9 @@ public class CPU implements Device {
 			this.push(ERegister.values()[this.operands[0]]);
 		}else if (opCode == EOpcode.ePop.ordinal()) {
 			this.pop(ERegister.values()[this.operands[0]]);
-		}else if (opCode == EOpcode.eInterrupt.ordinal()) {
+//		}else if (opCode == EOpcode.eInterrupt.ordinal()) {
 		// interrupt 나중에 생각하기
-			this.interrupt(this.combineOperand(Arrays.copyOfRange(operands, 0, 2)), ERegister.values()[this.operands[2]]);
+//			this.interrupt(this.combineOperand(Arrays.copyOfRange(operands, 0, 2)), ERegister.values()[this.operands[2]]);
 		}else if(opCode == EOpcode.eLoadr.ordinal()) {
 			this.loadr(ERegister.values()[this.operands[0]], ERegister.values()[this.operands[1]]);
 		}else if(opCode == EOpcode.eStorer.ordinal()) {
