@@ -10,15 +10,16 @@ import assembler.symbolTable.Token;
 import component.InstructionMappingTable;
 
 public class CodeGenerator {
-	public static final int _8_BIT_OS = 8;
+	public static final int _64_BIT_OS = 64;
 	public static final int _32_BIT_OS = 32;
-	public int bit_type = _8_BIT_OS;	// 비트 수가 먼저 정해지고 instruction의 길이가 정해져야 하나?
+	public int bit_type;
 	private Vector<String> instruction_set;
 	private Parser parser;
 	private SymbolTable symbol_table;
-	public CodeGenerator(Parser parser) {
+	public CodeGenerator(Parser parser, int bit_type) {
 		this.instruction_set = new Vector<>();
 		this.parser = parser;
+		this.bit_type = bit_type;
 	}
 	public Vector<String> getInstructions(){
 		return this.instruction_set;
@@ -108,7 +109,8 @@ public class CodeGenerator {
 			}
 			if(i==0) {
 				// code segment 크기 설정.
-				this.symbol_table.getSymbol("code").setSize(this.instruction_set.size() * this.bit_type / 8);
+				this.symbol_table.getSymbol("code").setSize(this.instruction_set.size() * this.bit_type / (8*8));
+				// 64bit = 8 byte -> 현재 Long type 쓰니까 8로 한번 더 나눠줌 (8 byte type)
 				//label offset 설정
 				for(Token t : this.symbol_table.getSymbolTable()) {
 					if(t.getType() == EType.eLabel) {

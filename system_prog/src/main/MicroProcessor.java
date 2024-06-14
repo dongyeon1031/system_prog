@@ -73,7 +73,7 @@ public class MicroProcessor {
 			this.vga.run();
 		}
 //		this.displayPanel = new DisplayPanel(this);
-		
+
 	}
 
 	public void finish() {

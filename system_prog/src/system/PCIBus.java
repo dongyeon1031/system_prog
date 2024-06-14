@@ -24,7 +24,7 @@ public class PCIBus {
 		return true;
 	}
 
-	public Vector<Integer> load(EDeviceId eDeviceid, int startAddress, int size) {
+	public Vector<Long> load(EDeviceId eDeviceid, int startAddress, int size) {
 		if(eDeviceid == EDeviceId.eMemory) {
 			return new Vector<>(this.memory.loadSection(startAddress, size));
 		}

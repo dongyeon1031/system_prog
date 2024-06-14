@@ -33,14 +33,13 @@ public class OperationSystem {
 			PCB pcb = this.kernal.createPCB(scanner);
 			if(pcb == null) {
 				// interrupt로 console에 찍어야 함.
-				System.out.println("wrong file id");
+				throw new Exception("wrong file id");
 			}
 			this.loader.load(scanner, pcb);
 			return true;
 		} catch (IOException e) {
 			// interrupt로 console에 찍어야 함.
-        	System.out.println("a.out does not exist");
-            return false;
+        	throw new Exception("a.out does not exist");
         }
 	}
 }

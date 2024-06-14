@@ -11,7 +11,7 @@ public class VGA implements Device{
 	public static final int TEXT_MODE_MEMORY_SIZE = 1024; // 4kb = 4096byte -> 1024 * 4byte(integer)
 	public static int system_memory_address;
 	//component
-	private Vector<Integer> vga_memory;
+	private Vector<Long> vga_memory;
 	//association
 	private Monitor monitor;
 	private PCIBus pciBus;

@@ -145,7 +145,7 @@ public class DisplayPanel extends JFrame{
 	}
 	
 	private void updateUI() {
-		int[] registerState = this.microProcessor.getCPU().getState();
+		long[] registerState = this.microProcessor.getCPU().getState();
 		for(int i = 0 ; i<registerState.length; i++) {
 			this.registerLabels[i].setText(String.format("%08x", registerState[i]));
 		}
@@ -190,15 +190,15 @@ public class DisplayPanel extends JFrame{
 			this.setViewportView(jTable);
 			
 		}
-		public void setInstruction(int[][] instructions, int bp, int sp, int pc) {
+		public void setInstruction(long[][] instructions, long bp, long sp, long pc) {
 			this.model.setRowCount(0);
 			for(int i = 0; i < instructions.length; i++) {
-				String[] row = {Integer.toHexString(instructions[i][0]), String.format("%08x", instructions[i][1])};
+				String[] row = {Long.toHexString(instructions[i][0]), String.format("%08x", instructions[i][1])};
 				this.model.addRow(row);
 			}
-			this.bp = Integer.toHexString(bp);
-			this.sp = Integer.toHexString(sp);
-			this.pc = Integer.toHexString(pc);
+			this.bp = Long.toHexString(bp);
+			this.sp = Long.toHexString(sp);
+			this.pc = Long.toHexString(pc);
 			
 		}
 		

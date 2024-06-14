@@ -51,7 +51,7 @@ public class CPU implements Device {
 	private boolean isPcIncrease;
 
 	// component
-	private int registers[] = new int[ERegister.values().length];
+	private long registers[] = new long[ERegister.values().length];
 	private int opCode;
 	private int[] operands;
 	private MMU mmu;
@@ -76,11 +76,11 @@ public class CPU implements Device {
 	}
 
 	// method
-	private int get(ERegister eRegister) {
+	private long get(ERegister eRegister) {
 		return registers[eRegister.ordinal()];
 	}
 
-	private void set(ERegister eRegister, int value) {
+	private void set(ERegister eRegister, long value) {
 		this.registers[eRegister.ordinal()] = value;
 	}
 
@@ -119,7 +119,7 @@ public class CPU implements Device {
 		System.out.println("*************************************");
 		System.out.println("opcode: " + opcode);
 		System.out.print("operands: ");
-		for (int i : this.operands) {
+		for (long i : this.operands) {
 			System.out.print(String.format("%02x", i) + " ");
 		}
 		System.out.println("\nR0 : " + String.format("%x",this.registers[ERegister.eR0.ordinal()])
@@ -127,7 +127,7 @@ public class CPU implements Device {
 		+"\tR2: " + String.format("%x",this.registers[ERegister.eR2.ordinal()]));
 		System.out.println("*************************************\n");
 	}
-	public int[] getState() {
+	public long[] getState() {
 		return this.registers;
 	}
 	public EOperationSelectSignal getALUState() {
@@ -138,24 +138,24 @@ public class CPU implements Device {
 	private void increasePC() {
 		this.registers[ERegister.ePC.ordinal()] += 1;
 	}
-	public void setPC(int address) {
+	public void setPC(long address) {
 		this.registers[ERegister.ePC.ordinal()] = address;
 	}
-	public void setSP(int address) {
+	public void setSP(long address) {
 		this.registers[ERegister.eSP.ordinal()] = address;
 	}
 	
 	// instructions
 	
 	//@Memory Operation
-	private void load(ERegister Rd, int address) throws Exception {
+	private void load(ERegister Rd, long address) throws Exception {
 		// @input : Rd register, memory address
 		// @Rule : 주소를 MBR에 저장함. MBR의 값을 Rd register에 저장함.System.out.println(address);
 		this.registers[ERegister.eMBR.ordinal()] = this.mmu.load(EDeviceId.eMemory, address, 
 				this.registers[ERegister.eBase.ordinal()], this.registers[ERegister.eLimit.ordinal()]);
 		this.registers[Rd.ordinal()] = this.registers[ERegister.eMBR.ordinal()];
 	}
-	private void store(int address, ERegister Rd) throws Exception {
+	private void store(long address, ERegister Rd) throws Exception {
 		// @input : memory address, Rd register
 		// @Rule : Rd register의 값을 MBR에 옮기고 address를 MAR에 저장한 뒤 메모리에 저장한다.
 		this.registers[ERegister.eMAR.ordinal()] = address;
@@ -174,7 +174,6 @@ public class CPU implements Device {
 	private void storer(ERegister Rd, ERegister Rn) throws Exception {
 		// @input : Rd register, Rn register
 		// @Rule : Rn register의 값을 MBR에 옮기고 Rd register가 가리키는 메모리 주소를 MAR에 저장한 뒤 메모리에 저장한다.
-		
 		this.registers[ERegister.eMAR.ordinal()] = this.registers[Rd.ordinal()];
 		this.registers[ERegister.eMBR.ordinal()] = this.registers[Rn.ordinal()];
 		this.mmu.store(EDeviceId.eMemory, this.registers[ERegister.eMAR.ordinal()],
@@ -205,7 +204,7 @@ public class CPU implements Device {
 		// @Rule : Rn register의 값을 Rd register에 저장함.
 		this.registers[Rd.ordinal()] = this.registers[Rn.ordinal()];
 	}
-	private void movec(ERegister Rd, int constant) {
+	private void movec(ERegister Rd, long constant) {
 		// @input : Rd register, constant
 		// @Rule : const를 Rd register에 저장함.
 		
@@ -214,13 +213,13 @@ public class CPU implements Device {
 
 
 	//@Flow of control
-	private void jump(int address) {
+	private void jump(long address) {
 		// @input : address
 		// @Rule : PC register를 address로 jump함.
 		this.setPC(address);
 		this.isPcIncrease = false;
 	}
-	private void zero(int address) {
+	private void zero(long address) {
 		// @input : address
 		// @Rule : zero flag 값이 1이면 PC register를 address로 jump함.
 		if(this.getFlagStat(EStatus.eZero.getNGet())) {
@@ -229,7 +228,7 @@ public class CPU implements Device {
 		}
 	}
 	
-	private void belowZero(int address) {
+	private void belowZero(long address) {
 		// @input : address
 		// @Rule : below zero flag 값이 1이면 PC register를 address로 jump함.
 		if(this.getFlagStat(EStatus.eNegative.getNGet())) {
@@ -239,7 +238,7 @@ public class CPU implements Device {
 	}
 	
 	//@System Calls
-	private void interrupt(int address, ERegister Rd) {
+//	private void interrupt(long address, ERegister Rd) {
 //		switch(address) {
 //		case Memory.SCAN_INTERRUPT:
 //			this.set(Rd, this.bus.load(EDeviceId.eMemory, address));
@@ -248,7 +247,7 @@ public class CPU implements Device {
 //			this.bus.store(EDeviceId.eMemory, address, this.registers[Rd.ordinal()]);
 //			break;
 //		}
-	}
+//	}
 //	private void halt() {
 //		
 //	}
@@ -264,14 +263,14 @@ public class CPU implements Device {
 
 	private void decode() { // 해석
 		// opcode 1byte, operand 3byte인 경우
-		int instruction = this.get(ERegister.eIR);
-		this.opCode = instruction >> 24; // 1byte만 남기기 = opcode 가져오기
+		long instruction = this.get(ERegister.eIR);
+		this.opCode = (int) (instruction >> 24); // 1byte만 남기기 = opcode 가져오기
 		this.generateOperationSignal();	// opcode 기반으로 연산 선택 신호 만들기
-		this.operands[0] = instruction & 0x00ff0000; // operand 가져오기
+		this.operands[0] = (int) (instruction & 0x00ff0000); // operand 가져오기
 		this.operands[0] >>= 16;
-		this.operands[1] = instruction & 0x0000ff00;
+		this.operands[1] = (int) (instruction & 0x0000ff00);
 		this.operands[1] >>= 8;
-		this.operands[2] = instruction & 0x000000ff;
+		this.operands[2] = (int) (instruction & 0x000000ff);
 	}
 	private void generateOperationSignal() {
 		EOperationSelectSignal eOperationSelectSignal;
@@ -344,7 +343,7 @@ public class CPU implements Device {
 		return true;
 	}
 
-	public int combineOperand(int[] operand) {
+	public long combineOperand(int[] operand) {
 		// @input : Operand Array
 		// @Rule : 인덱스의 역순으로 자릿수를 잡아 합친다.
 		// ex) {0x10, 0x11} -> 0x1011

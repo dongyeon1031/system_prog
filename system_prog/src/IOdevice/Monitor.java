@@ -13,7 +13,7 @@ public class Monitor extends JFrame implements Device{
 	
 	//component
 //	private String information = "";
-	private Vector<Integer> buffer; //일단 버퍼를 integer 하나로 만들자.
+	private Vector<Long> buffer; //일단 버퍼를 integer 하나로 만들자.
 	private JLabel text;
 //	private Console console;
 
@@ -38,13 +38,13 @@ public class Monitor extends JFrame implements Device{
 //    		memory.interrupted = false;
 //    	}
 //    }
-    public void getSignal(Vector<Integer> signal) {
+    public void getSignal(Vector<Long> signal) {
     	// 원래는 전기 신호를 받아서 이걸 출력해야 하는데 지금은 그냥 숫자 출력
     	this.buffer = signal;
     	String str = "";
-    	for(int b : this.buffer) {
+    	for(long b : this.buffer) {
     		if(b != -1) {
-    			str += Integer.toString(b);
+    			str += Long.toString(b);
     		}
     	}
     	this.text.setText(str);

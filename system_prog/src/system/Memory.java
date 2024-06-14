@@ -13,7 +13,7 @@ public class Memory implements Device {
 	private PCB currentPCB;
 	
 	// component
-	public Vector<Integer> memories;
+	public Vector<Long> memories;
 	private Vector<PCB> process_table;
 //	public boolean interrupted = false;
 
@@ -26,7 +26,7 @@ public class Memory implements Device {
 		return true;
 	}
 
-	public int load(int MAR) {
+	public long load(long MAR) {
 //		if (MAR == SCAN_INTERRUPT) {
 //			this.interrupted = true;
 //			while (this.interrupted) {
@@ -37,14 +37,14 @@ public class Memory implements Device {
 //				}
 //			}
 //		}
-		return this.memories.get(MAR);
+		return this.memories.get((int) MAR);
 	}
-	public List<Integer> loadSection(int MAR, int size) {
+	public List<Long> loadSection(int MAR, int size) {
 		return this.memories.subList(MAR, size);
 	}
 
-	public boolean store(int MAR, int MBR) {
-		this.memories.set(MAR, MBR);
+	public boolean store(long MAR, long MBR) {
+		this.memories.set((int)MAR, MBR);
 //		if (MAR == PRINT_INTERRUPT) {
 //			this.interrupted = true;
 //		}
@@ -69,7 +69,7 @@ public class Memory implements Device {
 		// @output : 할당한 메모리의 시작 주소
 		int start_point = this.memories.size();
 		for (int i = 0; i < size; i++) {
-			this.memories.add(-1);
+			this.memories.add((long) -1);
 		}
 		return start_point;
 	}
@@ -87,9 +87,9 @@ public class Memory implements Device {
 		this.currentPCB.setState(PState.pRunning);
 	}
 	
-	public int[][] getState() {
+	public long[][] getState() {
 		int stack = this.currentPCB.getSP() + this.currentPCB.getMemoryAddress() - 15;	// stack은 15개정도 보여주기
-		int[][] retArray = new int[this.memories.size()-stack][2];
+		long[][] retArray = new long[this.memories.size()-stack][2];
 		int k = 0;
 		for(int i = stack; i < this.memories.size();i++) {
 			retArray[k][0] = i;
