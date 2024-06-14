@@ -58,6 +58,7 @@ public class CPU implements Device {
 	private ALU alu;
 
 	public CPU() {
+		System.out.println("hello cpu");
 		this.operands = new int[TERNARY];
 		// operand를 3개로 쪼개되, 3개를 각각 사용하지 않고, 1/2 혹은 2/1, 1/1와 같이 사용한다.
 		this.mmu = new MMU();	// mmu는 cpu 내부 부품이기 때문에 associate로 연결하지 않고 생성자에서 생성한다.
